@@ -13,11 +13,11 @@ type BookController struct {
 }
 
 func (uc *BookController) Routes(router *mux.Router) {
-	router.HandleFunc("/book", uc.CreateBook).Methods("POST")
-	router.HandleFunc("/book", uc.GetAllBooks).Methods("GET")
-	router.HandleFunc("/book/{id}", uc.GetBook).Methods("GET")
-	router.HandleFunc("/book/{id}", uc.UpdateBook).Methods("PUT")
-	router.HandleFunc("/book/{id}", uc.DeleteBook).Methods("DELETE")
+	router.HandleFunc("/books", uc.CreateBook).Methods("POST")
+	router.HandleFunc("/books", uc.GetAllBooks).Methods("GET")
+	router.HandleFunc("/books/{id}", uc.GetBook).Methods("GET")
+	router.HandleFunc("/books/{id}", uc.UpdateBook).Methods("PUT")
+	router.HandleFunc("/books/{id}", uc.DeleteBook).Methods("DELETE")
 }
 
 func (uc *BookController) CreateBook(w http.ResponseWriter, r *http.Request) {
@@ -59,10 +59,15 @@ func (uc *BookController) GetBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *BookController) UpdateBook(w http.ResponseWriter, r *http.Request) {
-	_ = mux.Vars(r)["id"]
+	id := mux.Vars(r)["id"]
 	var input dto.BookDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	if err := uc.Service.UpdateUser(id, input); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
