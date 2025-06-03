@@ -29,30 +29,6 @@ func (r *bookRepositoryGORM) GetById(id string) (entities.Book, error) {
 	return book, err
 }
 
-func (r *bookRepositoryGORM) GetByAuthor(author string) (entities.Book, error) {
-	var book entities.Book
-	err := r.db.First(&book, "author = ?", author).Error
-	return book, err
-}
-
-func (r *bookRepositoryGORM) GetByLanguage(language string) (entities.Book, error) {
-	var book entities.Book
-	err := r.db.First(&book, "language = ?", language).Error
-	return book, err
-}
-
-func (r *bookRepositoryGORM) GetByGenre(genre string) (entities.Book, error) {
-	var book entities.Book
-	err := r.db.First(&book, "genre = ?", genre).Error
-	return book, err
-}
-
-func (r *bookRepositoryGORM) GetByISBN(isbn string) (entities.Book, error) {
-	var book entities.Book
-	err := r.db.First(&book, "isbn = ?", isbn).Error
-	return book, err
-}
-
 func (r *bookRepositoryGORM) Update(id, title, language string) error {
 	return r.db.Model(&entities.Book{}).Where("id = ?", id).
 		Updates(map[string]interface{}{
